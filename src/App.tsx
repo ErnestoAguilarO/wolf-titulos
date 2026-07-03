@@ -6,6 +6,8 @@ import {
 } from './types';
 import WizardNav from './components/WizardNav';
 import PasoDatosGenerales from './components/PasoDatosGenerales';
+import PasoParteVendedora from './components/PasoParteVendedora';
+import wolfLogo from './wolf-logo.png';
 
 const datosOperacionVacios: DatosOperacion = {
   nombreOperacion: '',
@@ -14,7 +16,10 @@ const datosOperacionVacios: DatosOperacion = {
   region: '',
   rolAvaluo: '',
   nombreComprador: '',
+  rutComprador: '',
   nombreVendedor: '',
+  rutVendedor: '',
+  nombreCorredor: '',
   precio: '',
   tipoOperacion: 'compraventa',
 };
@@ -90,6 +95,7 @@ function App() {
   };
 
   // Validación simple: ¿puede avanzar desde el paso actual?
+  
   const puedeAvanzar = (): boolean => {
     if (estado.pasoActual === 'datos_operacion') {
       const d = estado.datosOperacion;
@@ -101,8 +107,11 @@ function App() {
         d.nombreComprador
       );
     }
+    if (estado.pasoActual === 'parte_vendedora') {
+      return estado.parteVendedora.tipoVendedor !== null;
+    }
     return true; // los demás pasos, por ahora, sin validación estricta
-  };
+  };;
 
   const renderPaso = () => {
     switch (estado.pasoActual) {
@@ -112,6 +121,15 @@ function App() {
             datos={estado.datosOperacion}
             onChange={(datosOperacion) =>
               setEstado((prev) => ({ ...prev, datosOperacion }))
+            }
+          />
+        );
+      case 'parte_vendedora':
+        return (
+          <PasoParteVendedora
+            parteVendedora={estado.parteVendedora}
+            onChange={(parteVendedora) =>
+              setEstado((prev) => ({ ...prev, parteVendedora }))
             }
           />
         );
@@ -134,8 +152,12 @@ function App() {
         fontFamily: 'system-ui, -apple-system, sans-serif',
       }}
     >
-      <div style={{ marginBottom: '32px', textAlign: 'center' }}>
-        <h1 style={{ margin: 0, color: '#1a1a2e' }}>Wolf Títulos</h1>
+     <div style={{ marginBottom: '32px', textAlign: 'center' }}>
+        <img
+          src={wolfLogo}
+          alt="Wolf Títulos"
+          style={{ height: '70px', marginBottom: '8px' }}
+        />
         <p style={{ color: '#999', fontSize: '13px', marginTop: '4px' }}>
           Estudio de títulos guiado
         </p>

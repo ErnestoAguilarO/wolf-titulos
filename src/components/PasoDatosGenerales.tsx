@@ -32,6 +32,19 @@ export default function PasoDatosGenerales({ datos, onChange }: Props) {
     onChange({ ...datos, [campo]: valor });
   };
 
+  const manejarCargaPromesa = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const archivo = e.target.files?.[0];
+    if (!archivo) return;
+    // Por ahora guardamos el archivo temporalmente en el navegador.
+    // Más adelante esto se conecta a Google Drive.
+    const urlTemporal = URL.createObjectURL(archivo);
+    onChange({
+      ...datos,
+      promesaArchivoNombre: archivo.name,
+      promesaArchivoUrl: urlTemporal,
+    });
+  };
+
   return (
     <div>
       <h2 style={{ marginBottom: '4px' }}>Datos generales de la operación</h2>
@@ -50,25 +63,14 @@ export default function PasoDatosGenerales({ datos, onChange }: Props) {
         />
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '16px' }}>
-        <div style={campoStyle}>
-          <label style={labelStyle}>Dirección del inmueble</label>
-          <input
-            style={inputStyle}
-            type="text"
-            value={datos.direccionInmueble}
-            onChange={(e) => actualizar('direccionInmueble', e.target.value)}
-          />
-        </div>
-        <div style={campoStyle}>
-          <label style={labelStyle}>Rol de avalúo</label>
-          <input
-            style={inputStyle}
-            type="text"
-            value={datos.rolAvaluo}
-            onChange={(e) => actualizar('rolAvaluo', e.target.value)}
-          />
-        </div>
+      <div style={campoStyle}>
+        <label style={labelStyle}>Dirección del inmueble</label>
+        <input
+          style={inputStyle}
+          type="text"
+          value={datos.direccionInmueble}
+          onChange={(e) => actualizar('direccionInmueble', e.target.value)}
+        />
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
@@ -115,6 +117,39 @@ export default function PasoDatosGenerales({ datos, onChange }: Props) {
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
         <div style={campoStyle}>
+          <label style={labelStyle}>RUT del vendedor</label>
+          <input
+            style={inputStyle}
+            type="text"
+            value={datos.rutVendedor}
+            onChange={(e) => actualizar('rutVendedor', e.target.value)}
+            placeholder="Ej: 12.345.678-9"
+          />
+        </div>
+        <div style={campoStyle}>
+          <label style={labelStyle}>RUT del comprador</label>
+          <input
+            style={inputStyle}
+            type="text"
+            value={datos.rutComprador}
+            onChange={(e) => actualizar('rutComprador', e.target.value)}
+            placeholder="Ej: 12.345.678-9"
+          />
+        </div>
+      </div>
+
+      <div style={campoStyle}>
+        <label style={labelStyle}>Nombre del corredor (si aplica)</label>
+        <input
+          style={inputStyle}
+          type="text"
+          value={datos.nombreCorredor}
+          onChange={(e) => actualizar('nombreCorredor', e.target.value)}
+        />
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+        <div style={campoStyle}>
           <label style={labelStyle}>Precio</label>
           <input
             style={inputStyle}
@@ -133,6 +168,59 @@ export default function PasoDatosGenerales({ datos, onChange }: Props) {
             disabled
           />
         </div>
+      </div>
+
+      <div style={{ ...campoStyle, marginTop: '10px' }}>
+        <label style={labelStyle}>Promesa o Cierre de negocios</label>
+        <div
+          style={{
+            border: '1px dashed #ccc',
+            borderRadius: '8px',
+            padding: '18px',
+            textAlign: 'center',
+            backgroundColor: '#fafafa',
+          }}
+        >
+          {datos.promesaArchivoNombre ? (
+            <div style={{ fontSize: '14px', color: '#333' }}>
+              📄 {datos.promesaArchivoNombre}
+              <div style={{ marginTop: '8px' }}>
+                <label
+                  style={{
+                    fontSize: '13px',
+                    color: '#1a1a2e',
+                    textDecoration: 'underline',
+                    cursor: 'pointer',
+                  }}
+                >
+                  Cambiar archivo
+                  <input
+                    type="file"
+                    accept=".pdf,.doc,.docx"
+                    onChange={manejarCargaPromesa}
+                    style={{ display: 'none' }}
+                  />
+                </label>
+              </div>
+            </div>
+          ) : (
+            <label style={{ cursor: 'pointer', display: 'block' }}>
+              <div style={{ fontSize: '14px', color: '#777', marginBottom: '4px' }}>
+                📎 Click para subir la Promesa o Cierre de negocios
+              </div>
+              <div style={{ fontSize: '12px', color: '#aaa' }}>PDF, DOC o DOCX</div>
+              <input
+                type="file"
+                accept=".pdf,.doc,.docx"
+                onChange={manejarCargaPromesa}
+                style={{ display: 'none' }}
+              />
+            </label>
+          )}
+        </div>
+        <p style={{ fontSize: '11px', color: '#aaa', marginTop: '6px' }}>
+          Por ahora se guarda temporalmente en el navegador. Próximamente se conectará a Google Drive.
+        </p>
       </div>
     </div>
   );

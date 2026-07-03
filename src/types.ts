@@ -10,9 +10,14 @@ export interface DatosOperacion {
   region: string;
   rolAvaluo: string;
   nombreComprador: string;
+  rutComprador: string;
   nombreVendedor: string;
+  rutVendedor: string;
+  nombreCorredor: string;
   precio: string;
   tipoOperacion: 'compraventa';
+  promesaArchivoNombre?: string;
+  promesaArchivoUrl?: string;
 }
 
 // ---------- PASO 2: Parte vendedora ----------
